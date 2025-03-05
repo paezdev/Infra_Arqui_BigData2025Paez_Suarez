@@ -1,0 +1,52 @@
+name: Preprocesamiento y Limpieza de Datos
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  cleaning_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Configurar Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+
+      - name: Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .
+          pip install matplotlib seaborn
+
+      - name: Ejecutar script de limpieza
+        run: python src/cleaning.py
+
+      - name: Subir archivos generados como artefactos
+        uses: actions/upload-artifact@v4
+        with:
+          name: evidencias-limpieza
+          path: |
+            src/static/xlsx/cleaned_data.xlsx
+            src/static/auditoria/cleaning_report.txt
+
+      - name: Configurar Git para commit automático
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+
+      - name: Commit y Push de los cambios
+        run: |
+          git add src/static/xlsx/cleaned_data.xlsx src/static/auditoria/cleaning_report.txt
+          git commit -m "Actualización automática de evidencias de limpieza" || echo "No hay cambios para commitear"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
