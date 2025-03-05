@@ -1,16 +1,33 @@
+Para actualizar el archivo `README.md` de tu proyecto e incluir toda la información de la primera actividad, puedes seguir esta estructura. Asegúrate de que el `README.md` sea claro, completo y documente todos los aspectos importantes de la primera actividad, como la ingesta de datos, los scripts utilizados, los workflows de GitHub Actions y los resultados generados.
+
+### Actualización del `README.md`
+
+Aquí tienes un ejemplo actualizado del contenido del archivo `README.md` que incluye la información de la primera actividad:
+
+```markdown
 # **Infra_Arqui_BigData2025Paez_Suarez**
 
 ## **Descripción del Proyecto**
-Este proyecto implementa la etapa de **ingesta de datos** del proyecto integrador de Big Data. El objetivo principal es extraer datos desde un API, almacenarlos en una base de datos SQLite y generar evidencias complementarias, como un archivo de muestra en formato Excel y un archivo de auditoría en formato `.txt`. Además, el proyecto está automatizado mediante **GitHub Actions**, lo que permite ejecutar el proceso de ingesta de datos de manera continua y dejar evidencia de los resultados.
+Este proyecto implementa las etapas de **ingesta de datos** y **preprocesamiento y limpieza de datos** del proyecto integrador de Big Data. El objetivo principal es extraer datos desde un API, almacenarlos en una base de datos SQLite, realizar un análisis exploratorio, limpiar los datos y generar evidencias complementarias. Todo el proceso está automatizado mediante **GitHub Actions**, lo que permite ejecutar los scripts de manera continua y dejar evidencia de los resultados.
 
-### **Objetivos**
-1. Leer datos desde un API (Kaggle).
-2. Almacenar los datos en una base de datos SQLite.
-3. Generar evidencias complementarias:
-   - Un archivo Excel con una muestra representativa de los datos.
-   - Un archivo de auditoría que compare los registros extraídos con los almacenados.
-4. Automatizar el proceso mediante GitHub Actions.
-5. Manejar archivos pesados (como la base de datos) utilizando **Git LFS**.
+---
+
+## **Objetivos Generales**
+1. **Ingesta de Datos**:
+   - Leer datos desde un API (Kaggle).
+   - Almacenar los datos en una base de datos SQLite.
+   - Generar evidencias complementarias:
+     - Un archivo Excel con una muestra representativa de los datos.
+     - Un archivo de auditoría que compare los registros extraídos con los almacenados.
+   - Automatizar el proceso mediante GitHub Actions.
+   - Manejar archivos pesados (como la base de datos) utilizando **Git LFS**.
+
+2. **Preprocesamiento y Limpieza de Datos**:
+   - Validar, transformar y depurar el conjunto de datos extraído en la etapa de ingesta.
+   - Generar evidencias complementarias:
+     - Un archivo Excel o CSV con una muestra representativa de los registros limpios.
+     - Un archivo de auditoría que detalle las operaciones realizadas (eliminación de duplicados, manejo de valores nulos, corrección de tipos de datos, etc.).
+   - Automatizar el proceso mediante GitHub Actions.
 
 ---
 
@@ -18,61 +35,30 @@ Este proyecto implementa la etapa de **ingesta de datos** del proyecto integrado
 La estructura del proyecto es la siguiente:
 
 ```
-BigData2025Act1Paez_Suarez/
+Infra_Arqui_BigData2025Paez_Suarez/
 ├── setup.py                     # Configuración del proyecto y dependencias
 ├── README.md                    # Documentación del proyecto
 ├── .gitattributes               # Configuración de Git LFS para archivos pesados
 ├── .gitignore                   # Archivos y carpetas ignorados por Git
 ├── .github/
 │   └── workflows/
-│       └── bigdata.yml          # Workflow de GitHub Actions
+│       ├── bigdata.yml          # Workflow de ingesta de datos
+│       └── cleaning.yml         # Workflow de limpieza de datos
 ├── src/
 │   ├── ingestion.py             # Script principal de ingesta de datos
+│   ├── cleaning.py              # Script principal de limpieza de datos
 │   ├── static/
 │       ├── auditoria/
-│       │   └── ingestion.txt    # Archivo de auditoría generado
+│       │   ├── ingestion.txt    # Archivo de auditoría de ingesta
+│       │   └── cleaning_report.txt # Archivo de auditoría de limpieza
 │       ├── db/
 │       │   └── ingestion.db     # Base de datos SQLite generada (manejada con Git LFS)
 │       └── xlsx/
-│           └── ingestion.xlsx   # Archivo Excel de muestra generado
+│           ├── ingestion.xlsx   # Archivo Excel de muestra de ingesta
+│           └── cleaned_data.xlsx # Archivo Excel de muestra de limpieza
 └── .venv/                       # Entorno virtual (ignorado por Git)
 ```
-
----
-
-## **Gestión de Archivos Pesados con Git LFS**
-Dado que la base de datos SQLite (`ingestion.db`) puede ser un archivo pesado, se configuró **Git LFS (Large File Storage)** para manejar este archivo de manera eficiente. Esto asegura que los archivos grandes no sobrecarguen el repositorio y se gestionen de forma adecuada.
-
-### **Configuración de Git LFS**
-1. **Instalación de Git LFS**:
-   Si aún no tienes Git LFS instalado, puedes hacerlo con el siguiente comando:
-   ```bash
-   git lfs install
-   ```
-
-2. **Seguimiento de archivos pesados**:
-   Se configuró el archivo `.gitattributes` para que Git LFS maneje el archivo `ingestion.db`:
-   ```plaintext
-   src/static/db/ingestion.db filter=lfs diff=lfs merge=lfs -text
-   ```
-
-3. **Agregar el archivo al seguimiento de Git LFS**:
-   ```bash
-   git lfs track "src/static/db/ingestion.db"
-   ```
-
-4. **Confirmar los cambios**:
-   Asegúrate de que el archivo `.gitattributes` esté incluido en el repositorio:
-   ```bash
-   git add .gitattributes
-   git commit -m "Configuración de Git LFS para archivos pesados"
-   ```
-
-5. **Subir los archivos al repositorio**:
-   Una vez configurado, los archivos pesados serán manejados automáticamente por Git LFS al hacer `git push`.
-
----
-
+```
 ## **Base de Datos SQLite**
 
 ### **Ubicación**
@@ -122,24 +108,110 @@ La base de datos contiene las siguientes tablas, generadas a partir de los archi
 
 ---
 
+## **Primera Actividad: Ingesta de Datos**
+
+### **Descripción**
+La primera actividad consiste en la ingesta de datos desde un API (Kaggle), su almacenamiento en una base de datos SQLite y la generación de evidencias complementarias. Este proceso está automatizado mediante un workflow de GitHub Actions.
+
+### **Pasos Realizados**
+1. **Descarga de Datos**:
+   - Se descargaron los datos desde el dataset de Kaggle: [Brazilian E-Commerce Public Dataset](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce).
+   - Se utilizó la librería `kagglehub` para la descarga automática.
+
+2. **Procesamiento de Datos**:
+   - Los archivos CSV descargados se almacenaron en una base de datos SQLite (`ingestion.db`).
+   - Se generó un archivo Excel (`ingestion.xlsx`) con una muestra representativa de los datos.
+   - Se creó un archivo de auditoría (`ingestion.txt`) que compara los registros extraídos con los almacenados en la base de datos.
+
+3. **Automatización**:
+   - Se configuró un workflow de GitHub Actions (`bigdata.yml`) para ejecutar automáticamente el proceso de ingesta.
+
+### **Archivos Generados**
+- **Base de Datos SQLite**:
+  - **Ruta:** `src/static/db/ingestion.db`
+  - Contiene las tablas generadas a partir de los archivos CSV descargados.
+  - **Nota:** Este archivo es manejado mediante **Git LFS** debido a su tamaño.
+
+- **Archivo Excel de Muestra**:
+  - **Ruta:** `src/static/xlsx/ingestion.xlsx`
+  - Contiene una muestra representativa (las primeras 10 filas) de cada archivo CSV.
+
+- **Archivo de Auditoría**:
+  - **Ruta:** `src/static/auditoria/ingestion.txt`
+  - Contiene un reporte que compara el número de registros extraídos de los archivos CSV con los registros almacenados en la base de datos.
+
+### **Workflow de GitHub Actions**
+El workflow de ingesta (`bigdata.yml`) realiza las siguientes tareas:
+1. Configura Python 3.9 y las dependencias del proyecto.
+2. Configura las credenciales de Kaggle.
+3. Ejecuta el script de ingesta (`ingestion.py`).
+4. Sube los archivos generados como artefactos.
+5. Realiza un commit y push automático de los archivos generados al repositorio.
+
+---
+
+## **Segunda Actividad: Preprocesamiento y Limpieza de Datos**
+
+### **Descripción**
+La segunda actividad consiste en la limpieza y transformación de los datos extraídos en la primera actividad. Este proceso incluye la validación, eliminación de duplicados, manejo de valores nulos, corrección de tipos de datos y generación de evidencias complementarias.
+
+### **Pasos Realizados**
+1. **Extracción de Datos**:
+   - Se conectó a la base de datos SQLite generada en la primera actividad.
+   - Se cargaron los datos utilizando la librería `pandas`.
+
+2. **Análisis Exploratorio**:
+   - Se identificaron problemas de calidad en los datos, como registros duplicados, valores nulos e inconsistencias en los tipos de datos.
+
+3. **Limpieza y Transformación**:
+   - Se eliminaron registros duplicados.
+   - Se manejaron valores nulos mediante imputación o eliminación.
+   - Se corrigieron los tipos de datos para garantizar la consistencia.
+
+4. **Generación de Evidencias**:
+   - Se creó un archivo Excel (`cleaned_data.xlsx`) con una muestra representativa de los registros limpios.
+   - Se generó un archivo de auditoría (`cleaning_report.txt`) que documenta las operaciones realizadas.
+
+5. **Automatización**:
+   - Se configuró un workflow de GitHub Actions (`cleaning.yml`) para ejecutar automáticamente el proceso de limpieza.
+
+### **Archivos Generados**
+- **Archivo Excel de Datos Limpios**:
+  - **Ruta:** `src/static/xlsx/cleaned_data.xlsx`
+  - Contiene una muestra representativa de los registros limpios.
+
+- **Archivo de Auditoría**:
+  - **Ruta:** `src/static/auditoria/cleaning_report.txt`
+  - Documenta las operaciones realizadas durante la limpieza.
+
+### **Workflow de GitHub Actions**
+El workflow de limpieza (`cleaning.yml`) realiza las siguientes tareas:
+1. Configura Python 3.9 y las dependencias del proyecto.
+2. Extrae los datos desde la base de datos SQLite.
+3. Ejecuta el script de limpieza (`cleaning.py`).
+4. Sube los archivos generados como artefactos.
+5. Realiza un commit y push automático de los archivos generados al repositorio.
+
+---
+
 ## **Requisitos Previos**
 Antes de comenzar, asegúrate de tener instalado lo siguiente:
-
 1. **Python 3.9 o superior**.
 2. **pip** (gestor de paquetes de Python).
 3. **Git** y **Git LFS** para clonar el repositorio y manejar archivos pesados.
 4. **Cuenta en Kaggle** con credenciales configuradas para la API.
 
 ---
-
+```
+```
 ## **Instalación**
 
 ### **1. Clonar el repositorio**
 Clona este repositorio en tu máquina local:
 
 ```bash
-git clone https://github.com/paez-dev/BigData2025Act1Paez_Suarez.git
-cd BigData2025Act1Paez_Suarez
+git clone https://github.com/paezdev/Infra_Arqui_BigData2025Paez_Suarez.git
+cd Infra_Arqui_BigData2025Paez_Suarez
 ```
 
 ### **2. Instalar Git LFS**
@@ -179,91 +251,22 @@ pip install -e .
 ## **Ejecución Local**
 
 ### **1. Configurar las credenciales de Kaggle**
-Crea un archivo `kaggle.json` con tus credenciales de Kaggle y colócalo en la carpeta `~/.kaggle` (en Windows, `C:\Users\<tu_usuario>\.kaggle`):
+Crea un archivo `kaggle.json` con tus credenciales de Kaggle y colócalo en la carpeta `~/.kaggle` (en Windows, `C:\Users\<tu_usuario>\.kaggle`).
 
-```json
-{
-  "username": "TU_USUARIO",
-  "key": "TU_CLAVE_API"
-}
-```
-
-Asegúrate de que el archivo tenga los permisos correctos:
-
-```bash
-chmod 600 ~/.kaggle/kaggle.json
-```
-
-### **2. Ejecutar el script de ingesta**
-Ejecuta el script principal para realizar la ingesta de datos:
-
-```bash
-python src/ingestion.py
-```
-
-Este script realizará las siguientes tareas:
-1. Descargar el dataset desde Kaggle.
-2. Extraer los archivos CSV.
-3. Crear una base de datos SQLite (`src/static/db/ingestion.db`) con los datos extraídos.
-4. Generar un archivo Excel de muestra (`src/static/xlsx/ingestion.xlsx`).
-5. Generar un archivo de auditoría (`src/static/auditoria/ingestion.txt`).
+### **2. Ejecutar los scripts**
+- **Ingesta de Datos**:
+  ```bash
+  python src/ingestion.py
+  ```
+- **Limpieza de Datos**:
+  ```bash
+  python src/cleaning.py
+  ```
 
 ---
 
 ## **Automatización con GitHub Actions**
-
-El proyecto incluye un workflow de GitHub Actions configurado en el archivo `.github/workflows/bigdata.yml`. Este workflow se ejecuta automáticamente en los siguientes casos:
-- Cuando se realiza un `push` a la rama `main`.
-- Cuando se crea un pull request hacia la rama `main`.
-- Cuando se ejecuta manualmente desde la interfaz de GitHub.
-
-### **Pasos del Workflow**
-1. Configura Python 3.9 y las dependencias del proyecto.
-2. Configura las credenciales de Kaggle.
-3. Ejecuta el script de ingesta de datos.
-4. Sube los archivos generados (`ingestion.db`, `ingestion.xlsx`, `ingestion.txt`) como artefactos.
-5. Realiza un commit y push automático de los archivos generados al repositorio.
-
-### **Verificación**
-1. Ve a la pestaña **Actions** en el repositorio de GitHub.
-2. Selecciona la ejecución más reciente del workflow.
-3. Descarga los artefactos generados o verifica los archivos subidos al repositorio.
-
----
-
-## **Archivos Generados**
-
-### **1. Base de Datos SQLite**
-- **Ruta:** `src/static/db/ingestion.db`
-- Contiene las tablas generadas a partir de los archivos CSV descargados.
-- **Nota:** Este archivo es manejado mediante **Git LFS** debido a su tamaño.
-
-### **2. Archivo Excel de Muestra**
-- **Ruta:** `src/static/xlsx/ingestion.xlsx`
-- Contiene una muestra representativa (las primeras 10 filas) de cada archivo CSV.
-
-### **3. Archivo de Auditoría**
-- **Ruta:** `src/static/auditoria/ingestion.txt`
-- Contiene un reporte que compara el número de registros extraídos de los archivos CSV con los registros almacenados en la base de datos.
-
----
-
-## **Contribuciones**
-Si deseas contribuir a este proyecto, sigue estos pasos:
-1. Haz un fork del repositorio.
-2. Crea una nueva rama para tus cambios:
-   ```bash
-   git checkout -b feature/nueva-funcionalidad
-   ```
-3. Realiza tus cambios y haz un commit:
-   ```bash
-   git commit -m "Descripción de los cambios"
-   ```
-4. Haz un push a tu rama:
-   ```bash
-   git push origin feature/nueva-funcionalidad
-   ```
-5. Abre un pull request en GitHub.
+El proyecto incluye workflows de GitHub Actions para automatizar las etapas de ingesta y limpieza de datos. Los workflows se encuentran en la carpeta `.github/workflows`.
 
 ---
 
@@ -275,3 +278,4 @@ Si deseas contribuir a este proyecto, sigue estos pasos:
 
 ## **Licencia**
 Este proyecto está bajo la licencia MIT. Consulta el archivo `LICENSE` para más detalles.
+```
