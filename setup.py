@@ -7,7 +7,7 @@ setup(
     install_requires=[
         "pandas>=2.0.0",
         "kagglehub[pandas-datasets]>=0.3.8",
-        "openpyxl>=3.1.2"
+        "openpyxl>=3.1.2",
         "matplotlib>=3.5.0",
         "seaborn>=0.11.2",
         "numpy>=1.20.0"
