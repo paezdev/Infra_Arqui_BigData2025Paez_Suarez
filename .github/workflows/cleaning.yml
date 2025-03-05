@@ -1,11 +1,10 @@
 name: Preprocesamiento y Limpieza de Datos
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-  workflow_dispatch:
+  workflow_run:
+    workflows: ["Ingestión de Datos"] # Nombre del workflow de ingesta
+    types:
+      - completed
 
 jobs:
   cleaning_job:
