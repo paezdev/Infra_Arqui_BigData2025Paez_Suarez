@@ -1,0 +1,24 @@
+Reporte de Auditoría - 2025-03-05 18:38:50
+==============================
+Total de registros en archivos CSV: 1550922
+Total de registros en la base de datos: 1550922
+
+Detalle por archivo/tabla:
+olist_order_payments_dataset.csv: 103886 registros
+olist_sellers_dataset.csv: 3095 registros
+olist_geolocation_dataset.csv: 1000163 registros
+olist_order_reviews_dataset.csv: 99224 registros
+olist_order_items_dataset.csv: 112650 registros
+olist_customers_dataset.csv: 99441 registros
+product_category_name_translation.csv: 71 registros
+olist_orders_dataset.csv: 99441 registros
+olist_products_dataset.csv: 32951 registros
+Tabla 'olist_order_payments_dataset': 103886 registros
+Tabla 'olist_sellers_dataset': 3095 registros
+Tabla 'olist_geolocation_dataset': 1000163 registros
+Tabla 'olist_order_reviews_dataset': 99224 registros
+Tabla 'olist_order_items_dataset': 112650 registros
+Tabla 'olist_customers_dataset': 99441 registros
+Tabla 'product_category_name_translation': 71 registros
+Tabla 'olist_orders_dataset': 99441 registros
+Tabla 'olist_products_dataset': 32951 registros
