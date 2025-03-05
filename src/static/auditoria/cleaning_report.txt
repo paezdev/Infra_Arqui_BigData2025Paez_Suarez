@@ -1,0 +1,107 @@
+Reporte de Auditoría de Limpieza - 2025-03-05 19:12:39
+==================================================
+RESUMEN GENERAL:
+- Registros antes de la limpieza: 1550922
+- Registros después de la limpieza: 1289091
+- Valores nulos antes de la limpieza: 153259
+- Valores nulos después de la limpieza: 4748
+- Registros eliminados: 261831
+- Valores nulos tratados: 148511
+
+DETALLE POR TABLA:
+
+Tabla: olist_order_payments_dataset
+- Registros antes: 103886
+- Registros después: 103886
+- Valores nulos antes: 0
+- Valores nulos después: 0
+
+Operaciones realizadas:
+
+Tabla: olist_sellers_dataset
+- Registros antes: 3095
+- Registros después: 3095
+- Valores nulos antes: 0
+- Valores nulos después: 0
+
+Operaciones realizadas:
+
+Tabla: olist_geolocation_dataset
+- Registros antes: 1000163
+- Registros después: 738332
+- Valores nulos antes: 0
+- Valores nulos después: 0
+
+Operaciones realizadas:
+  * Se eliminaron 261831 filas duplicadas
+
+Tabla: olist_order_reviews_dataset
+- Registros antes: 99224
+- Registros después: 99224
+- Valores nulos antes: 145903
+- Valores nulos después: 0
+
+Operaciones realizadas:
+  * Se imputaron 87656 valores nulos en 'review_comment_title' con 'DESCONOCIDO'
+  * Se imputaron 58247 valores nulos en 'review_comment_message' con 'DESCONOCIDO'
+  * Se convirtió la columna 'review_creation_date' a tipo datetime
+  * Se convirtió la columna 'review_answer_timestamp' a tipo datetime
+  * Se categorizaron las puntuaciones de reseñas en sentimientos
+
+Tabla: olist_order_items_dataset
+- Registros antes: 112650
+- Registros después: 112650
+- Valores nulos antes: 0
+- Valores nulos después: 0
+
+Operaciones realizadas:
+  * Se convirtió la columna 'shipping_limit_date' a tipo datetime
+  * Se normalizó la columna 'price' creando 'price_normalized'
+
+Tabla: olist_customers_dataset
+- Registros antes: 99441
+- Registros después: 99441
+- Valores nulos antes: 0
+- Valores nulos después: 0
+
+Operaciones realizadas:
+
+Tabla: product_category_name_translation
+- Registros antes: 71
+- Registros después: 71
+- Valores nulos antes: 0
+- Valores nulos después: 0
+
+Operaciones realizadas:
+
+Tabla: olist_orders_dataset
+- Registros antes: 99441
+- Registros después: 99441
+- Valores nulos antes: 4908
+- Valores nulos después: 4748
+
+Operaciones realizadas:
+  * Se imputaron 160 valores nulos en 'order_approved_at' con 'DESCONOCIDO'
+  * Se imputaron 1783 valores nulos en 'order_delivered_carrier_date' con 'DESCONOCIDO'
+  * Se imputaron 2965 valores nulos en 'order_delivered_customer_date' con 'DESCONOCIDO'
+  * Se convirtió la columna 'order_purchase_timestamp' a tipo datetime
+  * Se convirtió la columna 'order_delivered_carrier_date' a tipo datetime
+  * Se convirtió la columna 'order_delivered_customer_date' a tipo datetime
+  * Se convirtió la columna 'order_estimated_delivery_date' a tipo datetime
+
+Tabla: olist_products_dataset
+- Registros antes: 32951
+- Registros después: 32951
+- Valores nulos antes: 2448
+- Valores nulos después: 0
+
+Operaciones realizadas:
+  * Se imputaron 610 valores nulos en 'product_category_name' con 'DESCONOCIDO'
+  * Se imputaron 610 valores nulos en 'product_name_lenght' con la mediana (51.0)
+  * Se imputaron 610 valores nulos en 'product_description_lenght' con la mediana (595.0)
+  * Se imputaron 610 valores nulos en 'product_photos_qty' con la mediana (1.0)
+  * Se imputaron 2 valores nulos en 'product_weight_g' con la mediana (700.0)
+  * Se imputaron 2 valores nulos en 'product_length_cm' con la mediana (25.0)
+  * Se imputaron 2 valores nulos en 'product_height_cm' con la mediana (13.0)
+  * Se imputaron 2 valores nulos en 'product_width_cm' con la mediana (20.0)
+  * Se estandarizaron los nombres de categorías de productos
