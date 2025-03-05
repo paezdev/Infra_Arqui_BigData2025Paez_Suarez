@@ -1,10 +1,3 @@
-Para actualizar el archivo `README.md` de tu proyecto e incluir toda la información de la primera actividad, puedes seguir esta estructura. Asegúrate de que el `README.md` sea claro, completo y documente todos los aspectos importantes de la primera actividad, como la ingesta de datos, los scripts utilizados, los workflows de GitHub Actions y los resultados generados.
-
-### Actualización del `README.md`
-
-Aquí tienes un ejemplo actualizado del contenido del archivo `README.md` que incluye la información de la primera actividad:
-
-```markdown
 # **Infra_Arqui_BigData2025Paez_Suarez**
 
 ## **Descripción del Proyecto**
@@ -34,7 +27,7 @@ Este proyecto implementa las etapas de **ingesta de datos** y **preprocesamiento
 ## **Estructura del Proyecto**
 La estructura del proyecto es la siguiente:
 
-```
+
 Infra_Arqui_BigData2025Paez_Suarez/
 ├── setup.py                     # Configuración del proyecto y dependencias
 ├── README.md                    # Documentación del proyecto
@@ -57,8 +50,7 @@ Infra_Arqui_BigData2025Paez_Suarez/
 │           ├── ingestion.xlsx   # Archivo Excel de muestra de ingesta
 │           └── cleaned_data.xlsx # Archivo Excel de muestra de limpieza
 └── .venv/                       # Entorno virtual (ignorado por Git)
-```
-```
+
 ## **Base de Datos SQLite**
 
 ### **Ubicación**
@@ -202,8 +194,7 @@ Antes de comenzar, asegúrate de tener instalado lo siguiente:
 4. **Cuenta en Kaggle** con credenciales configuradas para la API.
 
 ---
-```
-```
+
 ## **Instalación**
 
 ### **1. Clonar el repositorio**
