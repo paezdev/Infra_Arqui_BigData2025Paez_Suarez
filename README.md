@@ -1,4 +1,4 @@
-# **BigData2025Act1Paez_Suarez&peña_juliana**
+# **Infra_Arqui_BigData2025Paez_Suarez**
 
 ## **Descripción del Proyecto**
 Este proyecto implementa la etapa de **ingesta de datos** del proyecto integrador de Big Data. El objetivo principal es extraer datos desde un API, almacenarlos en una base de datos SQLite y generar evidencias complementarias, como un archivo de muestra en formato Excel y un archivo de auditoría en formato `.txt`. Además, el proyecto está automatizado mediante **GitHub Actions**, lo que permite ejecutar el proceso de ingesta de datos de manera continua y dejar evidencia de los resultados.
