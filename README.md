@@ -27,7 +27,7 @@ Este proyecto implementa las etapas de **ingesta de datos** y **preprocesamiento
 ## **Estructura del Proyecto**
 La estructura del proyecto es la siguiente:
 
-
+```
 Infra_Arqui_BigData2025Paez_Suarez/
 ├── setup.py                     # Configuración del proyecto y dependencias
 ├── README.md                    # Documentación del proyecto
@@ -50,6 +50,7 @@ Infra_Arqui_BigData2025Paez_Suarez/
 │           ├── ingestion.xlsx   # Archivo Excel de muestra de ingesta
 │           └── cleaned_data.xlsx # Archivo Excel de muestra de limpieza
 └── .venv/                       # Entorno virtual (ignorado por Git)
+```
 
 ## **Base de Datos SQLite**
 
@@ -269,4 +270,3 @@ El proyecto incluye workflows de GitHub Actions para automatizar las etapas de i
 
 ## **Licencia**
 Este proyecto está bajo la licencia MIT. Consulta el archivo `LICENSE` para más detalles.
-```
