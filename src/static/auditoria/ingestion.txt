@@ -1,4 +1,4 @@
-Reporte de Auditoría - 2025-03-05 19:49:53
+Reporte de Auditoría - 2025-03-06 00:31:18
 ==============================
 Total de registros en archivos CSV: 1550922
 Total de registros en la base de datos: 1550922
