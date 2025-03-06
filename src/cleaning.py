@@ -221,6 +221,32 @@ def generate_audit_report(analysis_results, cleaned_results, cleaning_operations
     print(f"Archivo de auditoría generado en: {audit_path}")
     return audit_path
 
+def save_cleaned_data_to_db(cleaned_results):
+    """
+    Guarda los datos limpios en una nueva base de datos SQLite.
+    """
+    print("Guardando datos limpios en base de datos...")
+    os.makedirs('src/static/db', exist_ok=True)
+    db_path = 'src/static/db/cleaned_data.db'
+
+    # Eliminar la base de datos si ya existe
+    if os.path.exists(db_path):
+        print(f"Eliminando base de datos existente en {db_path}...")
+        os.remove(db_path)
+
+    # Crear nueva conexión
+    conn = sqlite3.connect(db_path)
+
+    # Guardar cada DataFrame limpio como una tabla
+    for table_name, df in cleaned_results.items():
+        clean_table_name = f"clean_{table_name}"
+        print(f"Guardando tabla limpia: {clean_table_name}")
+        df.to_sql(clean_table_name, conn, if_exists="replace", index=False)
+
+    conn.close()
+    print(f"Base de datos con datos limpios generada en: {db_path}")
+    return db_path
+
 def main():
     try:
         # Conectar a la base de datos
@@ -235,11 +261,20 @@ def main():
         # Limpieza de datos
         cleaned_results, cleaning_operations = clean_data(analysis_results)
 
-        # Exportar datos limpios
+        # Exportar datos limpios a Excel
         export_cleaned_data(cleaned_results)
 
+        # Guardar datos limpios en base de datos
+        cleaned_db_path = save_cleaned_data_to_db(cleaned_results)
+
         # Generar reporte de auditoría
-        generate_audit_report(analysis_results, cleaned_results, cleaning_operations)
+        audit_path = generate_audit_report(analysis_results, cleaned_results, cleaning_operations)
+
+        # Actualizar el reporte de auditoría con información sobre la base de datos
+        with open(audit_path, 'a', encoding='utf-8') as f:
+            f.write(f"\n\nDATOS LIMPIOS GUARDADOS EN BASE DE DATOS:")
+            f.write(f"\n- Ruta: {cleaned_db_path}")
+            f.write(f"\n- Tablas generadas: {', '.join([f'clean_{table}' for table in cleaned_results.keys()])}")
 
         # Cerrar conexión
         conn.close()
