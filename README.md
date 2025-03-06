@@ -1,4 +1,4 @@
-# **Infra_Arqui_BigData2025Paez_Suarez**
+# **Infra_Arqui_BigData2025PaezJeanCarlos_SuarezJuliana**
 
 ## **Descripción del Proyecto**
 Este proyecto implementa las etapas de **ingesta de datos** y **preprocesamiento y limpieza de datos** del proyecto integrador de Big Data. El objetivo principal es extraer datos desde un API, almacenarlos en una base de datos SQLite, realizar un análisis exploratorio, limpiar los datos y generar evidencias complementarias. Todo el proceso está automatizado mediante **GitHub Actions**, lo que permite ejecutar los scripts de manera continua y dejar evidencia de los resultados.
@@ -36,7 +36,6 @@ Infra_Arqui_BigData2025Paez_Suarez/
 ├── .github/
 │   └── workflows/
 │       ├── bigdata.yml          # Workflow de ingesta de datos
-│       └── cleaning.yml         # Workflow de limpieza de datos
 ├── src/
 │   ├── ingestion.py             # Script principal de ingesta de datos
 │   ├── cleaning.py              # Script principal de limpieza de datos
@@ -46,9 +45,9 @@ Infra_Arqui_BigData2025Paez_Suarez/
 │       │   └── cleaning_report.txt # Archivo de auditoría de limpieza
 │       ├── db/
 │       │   └── ingestion.db     # Base de datos SQLite generada (manejada con Git LFS)
-│       └── xlsx/
-│           ├── ingestion.xlsx   # Archivo Excel de muestra de ingesta
-│           └── cleaned_data.xlsx # Archivo Excel de muestra de limpieza
+│       └── csv/
+│           ├── ingestion.csv   # Archivo csv de muestra de ingesta
+│           └── cleaned_data.csv # Archivo csv de muestra de limpieza
 └── .venv/                       # Entorno virtual (ignorado por Git)
 ```
 
@@ -113,7 +112,7 @@ La primera actividad consiste en la ingesta de datos desde un API (Kaggle), su a
 
 2. **Procesamiento de Datos**:
    - Los archivos CSV descargados se almacenaron en una base de datos SQLite (`ingestion.db`).
-   - Se generó un archivo Excel (`ingestion.xlsx`) con una muestra representativa de los datos.
+   - Se generó un archivo csv (`ingestion.csv`) con una muestra representativa de los datos.
    - Se creó un archivo de auditoría (`ingestion.txt`) que compara los registros extraídos con los almacenados en la base de datos.
 
 3. **Automatización**:
@@ -125,8 +124,8 @@ La primera actividad consiste en la ingesta de datos desde un API (Kaggle), su a
   - Contiene las tablas generadas a partir de los archivos CSV descargados.
   - **Nota:** Este archivo es manejado mediante **Git LFS** debido a su tamaño.
 
-- **Archivo Excel de Muestra**:
-  - **Ruta:** `src/static/xlsx/ingestion.xlsx`
+- **Archivo Csv de Muestra**:
+  - **Ruta:** `src/static/csv/ingestion.csv`
   - Contiene una muestra representativa (las primeras 10 filas) de cada archivo CSV.
 
 - **Archivo de Auditoría**:
@@ -162,15 +161,15 @@ La segunda actividad consiste en la limpieza y transformación de los datos extr
    - Se corrigieron los tipos de datos para garantizar la consistencia.
 
 4. **Generación de Evidencias**:
-   - Se creó un archivo Excel (`cleaned_data.xlsx`) con una muestra representativa de los registros limpios.
+   - Se creó un archivo csv (`cleaned_data.csv`) con una muestra representativa de los registros limpios.
    - Se generó un archivo de auditoría (`cleaning_report.txt`) que documenta las operaciones realizadas.
 
 5. **Automatización**:
    - Se configuró un workflow de GitHub Actions (`cleaning.yml`) para ejecutar automáticamente el proceso de limpieza.
 
 ### **Archivos Generados**
-- **Archivo Excel de Datos Limpios**:
-  - **Ruta:** `src/static/xlsx/cleaned_data.xlsx`
+- **Archivo Csv de Datos Limpios**:
+  - **Ruta:** `src/static/csv/cleaned_data.csv`
   - Contiene una muestra representativa de los registros limpios.
 
 - **Archivo de Auditoría**:
