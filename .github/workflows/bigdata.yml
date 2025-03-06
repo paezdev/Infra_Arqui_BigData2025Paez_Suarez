@@ -61,6 +61,7 @@ jobs:
         with:
           name: evidencias-limpieza
           path: |
+            src/static/db/cleaned_data.db
             src/static/xlsx/cleaned_data.xlsx
             src/static/auditoria/cleaning_report.txt
 
@@ -74,7 +75,7 @@ jobs:
       - name: Commit y Push de los cambios
         run: |
           git add src/static/db/ingestion.db src/static/xlsx/ingestion.xlsx src/static/auditoria/ingestion.txt
-          git add src/static/xlsx/cleaned_data.xlsx src/static/auditoria/cleaning_report.txt
+          git add src/static/db/cleaned_data.db src/static/xlsx/cleaned_data.xlsx src/static/auditoria/cleaning_report.txt
           git commit -m "Actualización automática de evidencias de ingesta y limpieza" || echo "No hay cambios para commitear"
           git pull --rebase origin main
           git push
