@@ -1,4 +1,4 @@
-Reporte de Auditoría de Limpieza - 2025-03-06 00:31:28
+Reporte de Auditoría de Limpieza - 2025-03-06 00:43:12
 ==================================================
 RESUMEN GENERAL:
 - Registros antes de la limpieza: 1550922
@@ -105,3 +105,7 @@ Operaciones realizadas:
   * Se imputaron 2 valores nulos en 'product_height_cm' con la mediana (13.0)
   * Se imputaron 2 valores nulos en 'product_width_cm' con la mediana (20.0)
   * Se estandarizaron los nombres de categorías de productos
+
+DATOS LIMPIOS GUARDADOS EN BASE DE DATOS:
+- Ruta: src/static/db/cleaned_data.db
+- Tablas generadas: clean_olist_order_payments_dataset, clean_olist_sellers_dataset, clean_olist_geolocation_dataset, clean_olist_order_reviews_dataset, clean_olist_order_items_dataset, clean_olist_customers_dataset, clean_product_category_name_translation, clean_olist_orders_dataset, clean_olist_products_dataset
