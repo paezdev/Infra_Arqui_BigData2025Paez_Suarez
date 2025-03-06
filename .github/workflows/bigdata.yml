@@ -1,4 +1,4 @@
-name: Ingestión de Datos
+name: Proceso Completo de Ingesta y Limpieza de Datos
 
 on:
   push:
@@ -8,32 +8,41 @@ on:
   workflow_dispatch:
 
 jobs:
-  ingest_job:
+  data_processing:
     runs-on: ubuntu-latest
     steps:
+      # Paso 1: Checkout del repositorio
       - name: Checkout del repositorio
         uses: actions/checkout@v4
+        with:
+          lfs: true
 
+      # Paso 2: Configurar Python 3.9
       - name: Configurar Python 3.9
         uses: actions/setup-python@v4
         with:
           python-version: 3.9
 
+      # Paso 3: Configurar credenciales de Kaggle
       - name: Configurar credenciales de Kaggle
         run: |
           mkdir -p ~/.kaggle
           printf '{"username": "%s", "key": "%s"}' "${{ secrets.KAGGLE_USERNAME }}" "${{ secrets.KAGGLE_KEY }}" > ~/.kaggle/kaggle.json
           chmod 600 ~/.kaggle/kaggle.json
 
+      # Paso 4: Instalar dependencias
       - name: Instalar dependencias
         run: |
           python -m pip install --upgrade pip
           pip install -e .
+          pip install matplotlib seaborn
 
+      # Paso 5: Ejecutar script de ingesta
       - name: Ejecutar script de ingesta
         run: python src/ingestion.py
 
-      - name: Subir archivos generados como artefactos
+      # Paso 6: Subir artefactos de ingesta
+      - name: Subir artefactos de ingesta
         uses: actions/upload-artifact@v4
         with:
           name: evidencias-ingestion
@@ -42,15 +51,32 @@ jobs:
             src/static/xlsx/ingestion.xlsx
             src/static/auditoria/ingestion.txt
 
+      # Paso 7: Ejecutar script de limpieza
+      - name: Ejecutar script de limpieza
+        run: python src/cleaning.py
+
+      # Paso 8: Subir artefactos de limpieza
+      - name: Subir artefactos de limpieza
+        uses: actions/upload-artifact@v4
+        with:
+          name: evidencias-limpieza
+          path: |
+            src/static/xlsx/cleaned_data.xlsx
+            src/static/auditoria/cleaning_report.txt
+
+      # Paso 9: Configurar Git para commit automático
       - name: Configurar Git para commit automático
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
 
+      # Paso 10: Commit y Push de los cambios
       - name: Commit y Push de los cambios
         run: |
           git add src/static/db/ingestion.db src/static/xlsx/ingestion.xlsx src/static/auditoria/ingestion.txt
-          git commit -m "Actualización automática de evidencias de ingesta" || echo "No hay cambios para commitear"
+          git add src/static/xlsx/cleaned_data.xlsx src/static/auditoria/cleaning_report.txt
+          git commit -m "Actualización automática de evidencias de ingesta y limpieza" || echo "No hay cambios para commitear"
+          git pull --rebase origin main
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
