@@ -76,7 +76,7 @@ def generate_sample_file(csv_dir):
     Para la evidencia complementaria, genera un archivo Excel que combine una muestra representativa de cada CSV.
     Se crea un DataFrame concatenando las primeras 10 filas de cada archivo y luego se exporta a Excel.
     """
-    os.makedirs('src/static/xlsx', exist_ok=True)
+    os.makedirs('src/static/csv', exist_ok=True)
     samples = []
     csv_files = [f for f in os.listdir(csv_dir) if f.endswith('.csv')]
     for file in csv_files:
@@ -91,9 +91,9 @@ def generate_sample_file(csv_dir):
             continue
     if samples:
         final_sample = pd.concat(samples)
-        excel_path = 'src/static/xlsx/ingestion.xlsx'
-        final_sample.to_excel(excel_path, index=False)
-        print("Archivo Excel de muestra generado en:", excel_path)
+        csv_path = 'src/static/xlsx/ingestion.csv'
+        final_sample.to_csv(csv_path, index=False)
+        print("Archivo csv de muestra generado en:", csv_path)
     else:
         print("No se generó archivo de muestra porque no se pudo leer ningún CSV.")
 

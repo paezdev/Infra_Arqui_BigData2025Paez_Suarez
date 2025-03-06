@@ -150,7 +150,7 @@ def export_cleaned_data(cleaned_results):
     Exporta los datos limpios a un archivo Excel o CSV.
     """
     print("Exportando datos limpios...")
-    os.makedirs('src/static/xlsx', exist_ok=True)
+    os.makedirs('src/static/csv', exist_ok=True)
 
     # Seleccionar una muestra representativa de cada tabla
     samples = []
@@ -164,9 +164,9 @@ def export_cleaned_data(cleaned_results):
     # Concatenar todas las muestras
     if samples:
         final_sample = pd.concat(samples)
-        excel_path = 'src/static/xlsx/cleaned_data.xlsx'
-        final_sample.to_excel(excel_path, index=False)
-        print(f"Archivo Excel con datos limpios generado en: {excel_path}")
+        csv_path = 'src/static/xlsx/cleaned_data.csv'
+        final_sample.to_csv(csv_path, index=False)
+        print(f"Archivo csv con datos limpios generado en: {csv_path}")
     else:
         print("No se pudo generar el archivo de datos limpios.")
 
