@@ -164,7 +164,7 @@ def export_cleaned_data(cleaned_results):
     # Concatenar todas las muestras
     if samples:
         final_sample = pd.concat(samples)
-        csv_path = 'src/static/xlsx/cleaned_data.csv'
+        csv_path = 'src/static/csv/cleaned_data.csv'
         final_sample.to_csv(csv_path, index=False)
         print(f"Archivo csv con datos limpios generado en: {csv_path}")
     else:
