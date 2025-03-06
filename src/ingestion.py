@@ -91,7 +91,7 @@ def generate_sample_file(csv_dir):
             continue
     if samples:
         final_sample = pd.concat(samples)
-        csv_path = 'src/static/xlsx/ingestion.csv'
+        csv_path = 'src/static/csv/ingestion.csv'
         final_sample.to_csv(csv_path, index=False)
         print("Archivo csv de muestra generado en:", csv_path)
     else:
