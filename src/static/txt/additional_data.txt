@@ -1,0 +1,6 @@
+
+    Supplier Ratings:
+    A - Premium Supplier (Discount: 15%)
+    B - Standard Supplier (Discount: 10%)
+    C - Basic Supplier (Discount: 5%)
+    

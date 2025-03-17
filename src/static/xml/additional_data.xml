@@ -1,0 +1,1 @@
+<payment_methods><payment_method><id>PM001</id><name>Credit Card</name><processing_fee>2.5</processing_fee></payment_method><payment_method><id>PM002</id><name>Debit Card</name><processing_fee>1.5</processing_fee></payment_method><payment_method><id>PM003</id><name>Bank Transfer</name><processing_fee>0.5</processing_fee></payment_method></payment_methods>
