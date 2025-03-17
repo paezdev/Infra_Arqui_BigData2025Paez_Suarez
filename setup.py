@@ -10,7 +10,9 @@ setup(
         "openpyxl>=3.1.2",
         "matplotlib>=3.5.0",
         "seaborn>=0.11.2",
-        "numpy>=1.20.0"
+        "numpy>=1.20.0",
+        "lxml>=4.9.0",  # Para procesamiento de XML
+        "html5lib>=1.1" # Para procesamiento de HTML
     ],
     author="Jean Carlos Páez Ramírez y Juliana Maria Peña Suarez",
     author_email="",
