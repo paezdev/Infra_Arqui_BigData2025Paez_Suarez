@@ -146,7 +146,7 @@ jobs:
       - name: Subir artefactos
         uses: actions/upload-artifact@v4
         with:
-          name: evidencias-procesamiento
+          name: evidencias de las actividades
           path: |
             src/static/auditoria/*.txt
             src/static/csv/*.csv
@@ -170,6 +170,9 @@ jobs:
           git add src/static/csv/*.csv || true
           git add src/static/xlsx/*.xlsx || true
           git add src/static/json/*.json || true
+          git add src/static/xml/*.xml || true
+          git add src/static/html/*.html || true
+          git add src/static/txt/*.txt || true
                     
           # Intentar hacer commit
           git commit -m "Actualización automática: Ingesta, limpieza de datos y evidencias del proceso de enriquecimiento de datos" || echo "No hay cambios para commitear"
