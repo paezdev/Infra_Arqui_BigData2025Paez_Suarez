@@ -15,7 +15,7 @@ jobs:
       - name: Checkout del repositorio
         uses: actions/checkout@v4
         with:
-          lfs: true
+          fetch-depth: 0
 
       # Paso 2: Configurar Python 3.9
       - name: Configurar Python 3.9
@@ -35,49 +35,54 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -e .
-          pip install matplotlib seaborn
 
-      # Paso 5: Ejecutar script de ingesta
+      # Paso 5: Sincronizar con el repositorio remoto
+      - name: Sincronizar con el repositorio remoto
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+          git clean -fdx
+
+      # Paso 6: Limpiar archivos generados anteriormente
+      - name: Limpiar archivos generados
+        run: |
+          rm -f src/static/auditoria/*.txt
+          rm -f src/static/csv/*.csv
+          rm -f src/static/db/*.db
+          git status
+
+      # Paso 7: Ejecutar script de ingesta
       - name: Ejecutar script de ingesta
         run: python src/ingestion.py
 
-      # Paso 6: Subir artefactos de ingesta
-      - name: Subir artefactos de ingesta
-        uses: actions/upload-artifact@v4
-        with:
-          name: evidencias-ingestion
-          path: |
-            src/static/db/ingestion.db
-            src/static/csv/ingestion.csv
-            src/static/auditoria/ingestion.txt
-
-      # Paso 7: Ejecutar script de limpieza
+      # Paso 8: Ejecutar script de limpieza
       - name: Ejecutar script de limpieza
         run: python src/cleaning.py
 
-      # Paso 8: Subir artefactos de limpieza
-      - name: Subir artefactos de limpieza
+      # Paso 9: Verificar archivos generados
+      - name: Verificar archivos generados
+        run: |
+          ls -la src/static/auditoria/
+          ls -la src/static/csv/
+          ls -la src/static/db/
+
+      # Paso 10: Subir artefactos generados
+      - name: Subir artefactos
         uses: actions/upload-artifact@v4
         with:
-          name: evidencias-limpieza
+          name: evidencias-procesamiento
           path: |
-            src/static/db/cleaned_data.db
-            src/static/csv/cleaned_data.csv
-            src/static/auditoria/cleaning_report.txt
+            src/static/auditoria/*.txt
+            src/static/csv/*.csv
+            src/static/db/*.db
 
-      # Paso 9: Configurar Git para commit automático
-      - name: Configurar Git para commit automático
-        run: |
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
-
-      # Paso 10: Commit y Push de los cambios
+      # Paso 11: Commit y Push de los cambios
       - name: Commit y Push de los cambios
         run: |
-          git add src/static/db/ingestion.db src/static/csv/ingestion.csv src/static/auditoria/ingestion.txt
-          git add src/static/db/cleaned_data.db src/static/csv/cleaned_data.csv src/static/auditoria/cleaning_report.txt
-          git commit -m "Actualización automática de evidencias de ingesta y limpieza" || echo "No hay cambios para commitear"
-          git pull --rebase origin main
-          git push
+          # Verificar si hay archivos para commitear
+          git add src/static/auditoria/*.txt || true
+          git add src/static/csv/*.csv || true
+          git commit -m "Actualización automática de evidencias de procesamiento" || echo "No hay cambios para commitear"
+          git push origin main || echo "No se pudo hacer push debido a conflictos"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
