@@ -527,7 +527,6 @@ Crea un archivo `kaggle.json` con tus credenciales de Kaggle y colócalo en la c
   ```bash
   python src/enrichment.py
   ```
-
 Este proceso generará:
 - Archivos de auditoría en `src/static/auditoria/`
 - Archivos de datos en varios formatos:
@@ -538,31 +537,6 @@ Este proceso generará:
   - HTML en `src/static/html/`
   - TXT en `src/static/txt/`
 - Bases de datos SQLite en `src/static/db/`
----
-## **Automatización con GitHub Actions**
-
-El proyecto incluye workflows de GitHub Actions para automatizar las etapas de **ingesta**, **limpieza** y **enriquecimiento de datos**. Estos workflows se encuentran en la carpeta `.github/workflows` y permiten ejecutar los scripts de manera continua, generando evidencias del proceso en cada etapa.
-
-El workflow principal (`bigdata.yml`) realiza las siguientes tareas:
-1. **Ingesta de Datos**:
-   - Ejecuta el script `ingestion.py` para extraer datos desde un API y almacenarlos en una base de datos SQLite.
-   - Genera archivos de muestra y un reporte de auditoría.
-
-2. **Limpieza de Datos**:
-   - Ejecuta el script `cleaning.py` para validar, transformar y depurar los datos extraídos.
-   - Genera un archivo limpio en formato CSV o Excel y un reporte de auditoría.
-
-3. **Enriquecimiento de Datos**:
-   - Ejecuta el script `enrichment.py` para integrar información adicional proveniente de múltiples fuentes y formatos (JSON, XLSX, CSV, XML, HTML, TXT).
-   - Genera un archivo enriquecido en formato Excel o CSV y un reporte de auditoría que documenta las operaciones realizadas.
-
-4. **Gestión de Artefactos**:
-   - Sube los archivos generados (datasets, reportes de auditoría y bases de datos) como artefactos del workflow, permitiendo su descarga y verificación.
-
-5. **Control de Versiones**:
-   - Realiza commits y push automáticos de los archivos generados al repositorio, asegurando la trazabilidad de los cambios.
-
-Este workflow asegura la automatización completa del proceso, desde la ingesta hasta el enriquecimiento de datos, y facilita la reproducibilidad del proyecto.
 --- 
 ## **Autores**
 - **Jean Carlos Páez Ramírez**
