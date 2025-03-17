@@ -1,0 +1,5 @@
+segment_id,segment_name,min_purchase,discount_rate
+S1,Bronze,0,0.0
+S2,Silver,1000,0.05
+S3,Gold,5000,0.1
+S4,Platinum,10000,0.15

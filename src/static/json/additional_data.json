@@ -1,0 +1,19 @@
+{
+    "additional_categories": [
+        {
+            "category_id": "CAT001",
+            "category_name": "Electronics",
+            "tax_rate": 0.19
+        },
+        {
+            "category_id": "CAT002",
+            "category_name": "Home & Garden",
+            "tax_rate": 0.16
+        },
+        {
+            "category_id": "CAT003",
+            "category_name": "Fashion",
+            "tax_rate": 0.12
+        }
+    ]
+}
