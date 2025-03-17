@@ -1,4 +1,4 @@
-name: Proceso Completo de Ingesta y Limpieza de Datos
+name: Proceso Completo de Ingesta, Limpieza y Proceso de enriquecimiento de datos.
 
 on:
   push:
@@ -39,16 +39,64 @@ jobs:
       # Paso 5: Sincronizar con el repositorio remoto
       - name: Sincronizar con el repositorio remoto
         run: |
-          git fetch origin main
-          git reset --hard origin/main
-          git clean -fdx
+          # Configurar Git
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "actions@github.com"
+          
+          # Sincronizar con el repositorio remoto
+          echo "Sincronizando con el repositorio remoto..."
+          git fetch origin main || echo "Error al hacer fetch"
+          git reset --hard origin/main || echo "Error al hacer reset"
+          git clean -fdx || echo "Error al limpiar archivos"
+          
+          # Verificar estado del repositorio
+          echo "Estado actual del repositorio:"
+          git status
+          
+          # Mostrar última confirmación
+          echo "Último commit:"
+          git log -1 --oneline
+        continue-on-error: true
 
       # Paso 6: Limpiar archivos generados anteriormente
       - name: Limpiar archivos generados
         run: |
+          # Limpiar archivos de auditoría
           rm -f src/static/auditoria/*.txt
+          
+          # Limpiar archivos CSV
           rm -f src/static/csv/*.csv
+          
+          # Limpiar archivos Excel
+          rm -f src/static/xlsx/*.xlsx
+          
+          # Limpiar archivos JSON
+          rm -f src/static/json/*.json
+          
+          # Limpiar archivos XML
+          rm -f src/static/xml/*.xml
+          
+          # Limpiar archivos HTML
+          rm -f src/static/html/*.html
+          
+          # Limpiar archivos TXT adicionales
+          rm -f src/static/txt/*.txt
+          
+          # Limpiar bases de datos
           rm -f src/static/db/*.db
+          
+          # Crear directorios necesarios si no existen
+          mkdir -p src/static/auditoria
+          mkdir -p src/static/csv
+          mkdir -p src/static/xlsx
+          mkdir -p src/static/json
+          mkdir -p src/static/xml
+          mkdir -p src/static/html
+          mkdir -p src/static/txt
+          mkdir -p src/static/db
+          
+          # Mostrar estado de Git
+          echo "Estado actual del repositorio:"
           git status
 
       # Paso 7: Ejecutar script de ingesta
@@ -59,14 +107,42 @@ jobs:
       - name: Ejecutar script de limpieza
         run: python src/cleaning.py
 
-      # Paso 9: Verificar archivos generados
+      # Paso 9: Ejecutar script de enriquecimiento
+      - name: Ejecutar script de enriquecimiento
+        run: python src/enrichment.py
+
+      # Paso 10: Verificar archivos generados
       - name: Verificar archivos generados
         run: |
+          echo "Verificando archivos de auditoría..."
           ls -la src/static/auditoria/
+          
+          echo -e "\nVerificando archivos CSV..."
           ls -la src/static/csv/
+          
+          echo -e "\nVerificando archivos Excel..."
+          ls -la src/static/xlsx/
+          
+          echo -e "\nVerificando archivos JSON..."
+          ls -la src/static/json/
+          
+          echo -e "\nVerificando archivos XML..."
+          ls -la src/static/xml/
+          
+          echo -e "\nVerificando archivos HTML..."
+          ls -la src/static/html/
+          
+          echo -e "\nVerificando archivos TXT..."
+          ls -la src/static/txt/
+          
+          echo -e "\nVerificando bases de datos..."
           ls -la src/static/db/
+          
+          echo -e "\nVerificando existencia de archivos específicos..."
+          test -f src/static/auditoria/enriched_report.txt && echo "✓ enriched_report.txt existe" || echo "✗ enriched_report.txt no existe"
+          test -f src/static/xlsx/enriched_data.xlsx && echo "✓ enriched_data.xlsx existe" || echo "✗ enriched_data.xlsx no existe"
 
-      # Paso 10: Subir artefactos generados
+      # Paso 11: Subir artefactos generados
       - name: Subir artefactos
         uses: actions/upload-artifact@v4
         with:
@@ -74,15 +150,32 @@ jobs:
           path: |
             src/static/auditoria/*.txt
             src/static/csv/*.csv
+            src/static/xlsx/*.xlsx
+            src/static/json/*.json
             src/static/db/*.db
-
-      # Paso 11: Commit y Push de los cambios
+            src/static/xml/*.xml
+            src/static/html/*.html
+            src/static/txt/*.txt
+          retention-days: 20
+      
+      # Paso 12: Commit y Push de los cambios
       - name: Commit y Push de los cambios
         run: |
+          # Configurar Git
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "actions@github.com"
+          
           # Verificar si hay archivos para commitear
           git add src/static/auditoria/*.txt || true
           git add src/static/csv/*.csv || true
-          git commit -m "Actualización automática de evidencias de procesamiento" || echo "No hay cambios para commitear"
+          git add src/static/xlsx/*.xlsx || true
+          git add src/static/json/*.json || true
+                    
+          # Intentar hacer commit
+          git commit -m "Actualización automática: Ingesta, limpieza de datos y evidencias del proceso de enriquecimiento de datos" || echo "No hay cambios para commitear"
+          
+          # Intentar hacer push
+          git pull --rebase origin main || echo "No se pudo hacer pull"
           git push origin main || echo "No se pudo hacer push debido a conflictos"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
