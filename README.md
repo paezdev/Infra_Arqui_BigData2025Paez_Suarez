@@ -13,7 +13,6 @@ Este proyecto implementa las etapas de **ingesta de datos** y **preprocesamiento
      - Un archivo Excel con una muestra representativa de los datos.
      - Un archivo de auditoría que compare los registros extraídos con los almacenados.
    - Automatizar el proceso mediante GitHub Actions.
-   - Manejar archivos pesados (como la base de datos) utilizando **Git LFS**.
 
 2. **Preprocesamiento y Limpieza de Datos**:
    - Validar, transformar y depurar el conjunto de datos extraído en la etapa de ingesta.
@@ -28,14 +27,13 @@ Este proyecto implementa las etapas de **ingesta de datos** y **preprocesamiento
 La estructura del proyecto es la siguiente:
 
 ```
-Infra_Arqui_BigData2025Paez_Suarez/
+BigData2025Act1Paez_Suarez/
 ├── setup.py                     # Configuración del proyecto y dependencias
 ├── README.md                    # Documentación del proyecto
-├── .gitattributes               # Configuración de Git LFS para archivos pesados
 ├── .gitignore                   # Archivos y carpetas ignorados por Git
 ├── .github/
 │   └── workflows/
-│       ├── bigdata.yml          # Workflow de ingesta de datos
+│       ├── bigdata.yml          # Workflow de ingesta de datos y preprocesamiento y limpieza de datos
 ├── src/
 │   ├── ingestion.py             # Script principal de ingesta de datos
 │   ├── cleaning.py              # Script principal de limpieza de datos
@@ -44,9 +42,10 @@ Infra_Arqui_BigData2025Paez_Suarez/
 │       │   ├── ingestion.txt    # Archivo de auditoría de ingesta
 │       │   └── cleaning_report.txt # Archivo de auditoría de limpieza
 │       ├── db/
-│       │   └── ingestion.db     # Base de datos SQLite generada (manejada con Git LFS)
+│       │  ├── ingestion.db      # Base de datos SQLite generada (inlcuida en gitignore)
+│       │  └── cleaned_data.db  # Base de datos SQLite generada (inlcuida en gitignore)        
 │       └── csv/
-│           ├── ingestion.csv   # Archivo csv de muestra de ingesta
+│           ├── ingestion.csv    # Archivo csv de muestra de ingesta
 │           └── cleaned_data.csv # Archivo csv de muestra de limpieza
 └── .venv/                       # Entorno virtual (ignorado por Git)
 ```
@@ -54,7 +53,7 @@ Infra_Arqui_BigData2025Paez_Suarez/
 ## **Base de Datos SQLite**
 
 ### **Ubicación**
-La base de datos SQLite generada se encuentra en la siguiente ruta dentro del proyecto:
+La base de datos SQLite generada se encuentra en la siguiente ruta dentro del proyecto, pero no está en el repo, porque se incluyó en el gitignore:
 ```
 src/static/db/ingestion.db
 ```
@@ -119,11 +118,6 @@ La primera actividad consiste en la ingesta de datos desde un API (Kaggle), su a
    - Se configuró un workflow de GitHub Actions (`bigdata.yml`) para ejecutar automáticamente el proceso de ingesta.
 
 ### **Archivos Generados**
-- **Base de Datos SQLite**:
-  - **Ruta:** `src/static/db/ingestion.db`
-  - Contiene las tablas generadas a partir de los archivos CSV descargados.
-  - **Nota:** Este archivo es manejado mediante **Git LFS** debido a su tamaño.
-
 - **Archivo Csv de Muestra**:
   - **Ruta:** `src/static/csv/ingestion.csv`
   - Contiene una muestra representativa (las primeras 10 filas) de cada archivo CSV.
@@ -176,6 +170,64 @@ La segunda actividad consiste en la limpieza y transformación de los datos extr
   - **Ruta:** `src/static/auditoria/cleaning_report.txt`
   - Documenta las operaciones realizadas durante la limpieza.
 
+
+## **Resumen de los Datos Después de la Limpieza**
+
+### **Resumen General**
+- **Registros antes de la limpieza:** 1,550,922  
+- **Registros después de la limpieza:** 1,289,091  
+- **Valores nulos antes de la limpieza:** 153,259  
+- **Valores nulos después de la limpieza:** 4,748  
+- **Registros eliminados:** 261,831  
+- **Valores nulos tratados:** 148,511  
+
+### **Cambios Principales por Tabla**
+
+#### **`olist_geolocation_dataset`**
+- **Registros antes:** 1,000,163  
+- **Registros después:** 738,332  
+- **Operaciones realizadas:**  
+  - Eliminación de 261,831 filas duplicadas
+
+#### **`olist_order_reviews_dataset`**
+- **Registros antes:** 99,224  
+- **Registros después:** 99,224  
+- **Operaciones realizadas:**  
+  - Imputación de valores nulos en `review_comment_title` y `review_comment_message` con "DESCONOCIDO"  
+  - Conversión de columnas de fecha a tipo `datetime`  
+  - Categorización de puntuaciones de reseñas en sentimientos
+
+#### **`olist_orders_dataset`**
+- **Registros antes:** 99,441  
+- **Registros después:** 99,441  
+- **Operaciones realizadas:**  
+  - Imputación de valores nulos en columnas como `order_approved_at`, `order_delivered_carrier_date` y `order_delivered_customer_date` con "DESCONOCIDO"  
+  - Conversión de columnas de fecha a tipo `datetime`
+
+#### **`olist_products_dataset`**
+- **Registros antes:** 32,951  
+- **Registros después:** 32,951  
+- **Operaciones realizadas:**  
+  - Imputación de valores nulos en columnas como `product_category_name`, `product_name_lenght`, `product_description_lenght`, y otras, utilizando valores como "DESCONOCIDO" o la mediana  
+  - Estandarización de nombres de categorías de productos
+
+### **Datos Limpios Guardados**
+- **Base de datos SQLite:** `src/static/db/cleaned_data.db`  
+- **Tablas generadas:**  
+  - `clean_olist_order_payments_dataset`  
+  - `clean_olist_sellers_dataset`  
+  - `clean_olist_geolocation_dataset`  
+  - `clean_olist_order_reviews_dataset`  
+  - `clean_olist_order_items_dataset`  
+  - `clean_olist_customers_dataset`  
+  - `clean_product_category_name_translation`  
+  - `clean_olist_orders_dataset`  
+  - `clean_olist_products_dataset`
+
+Este resumen refleja cómo los datos fueron depurados y transformados para garantizar su calidad, eliminando duplicados, imputando valores nulos y corrigiendo inconsistencias. Esto asegura que los datos estén listos para análisis posteriores y generación de insights.
+
+---
+
 ### **Workflow de GitHub Actions**
 El workflow de limpieza (`cleaning.yml`) realiza las siguientes tareas:
 1. Configura Python 3.9 y las dependencias del proyecto.
@@ -190,7 +242,6 @@ El workflow de limpieza (`cleaning.yml`) realiza las siguientes tareas:
 Antes de comenzar, asegúrate de tener instalado lo siguiente:
 1. **Python 3.9 o superior**.
 2. **pip** (gestor de paquetes de Python).
-3. **Git** y **Git LFS** para clonar el repositorio y manejar archivos pesados.
 4. **Cuenta en Kaggle** con credenciales configuradas para la API.
 
 ---
@@ -201,22 +252,11 @@ Antes de comenzar, asegúrate de tener instalado lo siguiente:
 Clona este repositorio en tu máquina local:
 
 ```bash
-git clone https://github.com/paezdev/Infra_Arqui_BigData2025Paez_Suarez.git
-cd Infra_Arqui_BigData2025Paez_Suarez
+git clone https://github.com/paez-dev/BigData2025Act1Paez_Suarez.git
+cd BigData2025Act1Paez_Suarez
 ```
 
-### **2. Instalar Git LFS**
-Si aún no tienes Git LFS instalado, configúralo en tu máquina local:
-```bash
-git lfs install
-```
-
-Asegúrate de que los archivos pesados se descarguen correctamente:
-```bash
-git lfs pull
-```
-
-### **3. Crear un entorno virtual**
+### **2. Crear un entorno virtual**
 Crea y activa un entorno virtual para instalar las dependencias:
 
 ```bash
@@ -230,7 +270,7 @@ python -m venv .venv
 source .venv/bin/activate
 ```
 
-### **4. Instalar las dependencias**
+### **3. Instalar las dependencias**
 Instala las dependencias del proyecto utilizando el archivo `setup.py`:
 
 ```bash

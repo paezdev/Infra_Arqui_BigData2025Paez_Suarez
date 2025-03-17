@@ -6,6 +6,23 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+def clean_previous_files():
+    """
+    Limpia los archivos generados anteriormente.
+    """
+    files_to_clean = [
+        'src/static/auditoria/cleaning_report.txt',
+        'src/static/csv/cleaned_data.csv'
+    ]
+
+    for file_path in files_to_clean:
+        if os.path.exists(file_path):
+            try:
+                os.remove(file_path)
+                print(f"Archivo eliminado: {file_path}")
+            except Exception as e:
+                print(f"No se pudo eliminar {file_path}: {e}")
+
 def connect_to_database():
     """
     Conecta con la base de datos SQLite generada en la Actividad 1.
@@ -152,6 +169,12 @@ def export_cleaned_data(cleaned_results):
     print("Exportando datos limpios...")
     os.makedirs('src/static/csv', exist_ok=True)
 
+    # Eliminar el archivo si ya existe
+    csv_path = 'src/static/csv/cleaned_data.csv'
+    if os.path.exists(csv_path):
+        print(f"Eliminando archivo existente: {csv_path}")
+        os.remove(csv_path)
+
     # Seleccionar una muestra representativa de cada tabla
     samples = []
     for table, df in cleaned_results.items():
@@ -249,6 +272,10 @@ def save_cleaned_data_to_db(cleaned_results):
 
 def main():
     try:
+
+        # Limpiar archivos anteriores
+        clean_previous_files()
+
         # Conectar a la base de datos
         conn = connect_to_database()
 

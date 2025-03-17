@@ -23,6 +23,10 @@ wheels/
 # Kaggle
 kaggle.json
 
+# Ignorar bases de datos SQLite
+src/static/db/ingestion.db
+src/static/db/cleaned_data.db
+
 
 # VS Code
 .vscode/

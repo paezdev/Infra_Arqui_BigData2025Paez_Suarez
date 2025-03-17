@@ -5,6 +5,23 @@ import pandas as pd
 import kagglehub
 from datetime import datetime
 
+def clean_previous_files():
+    """
+    Limpia los archivos generados anteriormente.
+    """
+    files_to_clean = [
+        'src/static/auditoria/ingestion.txt',
+        'src/static/csv/ingestion.csv'
+    ]
+
+    for file_path in files_to_clean:
+        if os.path.exists(file_path):
+            try:
+                os.remove(file_path)
+                print(f"Archivo eliminado: {file_path}")
+            except Exception as e:
+                print(f"No se pudo eliminar {file_path}: {e}")
+
 def download_dataset_zip():
     """
     Descarga el dataset desde Kaggle.
@@ -146,6 +163,10 @@ Detalle por archivo/tabla:
 
 def main():
     try:
+
+        # Limpiar archivos anteriores
+        clean_previous_files()
+
         # Descarga y extracción
         dataset_path = download_dataset_zip()
         csv_dir = extract_zip_files(dataset_path)
