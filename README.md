@@ -1,11 +1,15 @@
 # **Infra_Arqui_BigData2025PaezJeanCarlos_SuarezJuliana**
 
 ## **Descripción del Proyecto**
-Este proyecto implementa las etapas de **ingesta de datos** y **preprocesamiento y limpieza de datos** del proyecto integrador de Big Data. El objetivo principal es extraer datos desde un API, almacenarlos en una base de datos SQLite, realizar un análisis exploratorio, limpiar los datos y generar evidencias complementarias. Todo el proceso está automatizado mediante **GitHub Actions**, lo que permite ejecutar los scripts de manera continua y dejar evidencia de los resultados.
+
+Este proyecto implementa las etapas de **ingesta de datos**, **preprocesamiento y limpieza de datos**, y **enriquecimiento de datos** del proyecto integrador de Big Data. El objetivo principal es extraer datos desde un API, almacenarlos en una base de datos SQLite, realizar un análisis exploratorio, limpiar los datos, enriquecerlos con información adicional proveniente de múltiples fuentes y generar evidencias complementarias. 
+
+Todo el proceso está automatizado mediante **GitHub Actions**, lo que permite ejecutar los scripts de manera continua, integrar nuevas fuentes de datos y dejar evidencia de los resultados en cada etapa. Esto asegura la reproducibilidad y facilita el seguimiento del flujo de trabajo.
 
 ---
 
 ## **Objetivos Generales**
+
 1. **Ingesta de Datos**:
    - Leer datos desde un API (Kaggle).
    - Almacenar los datos en una base de datos SQLite.
@@ -21,9 +25,19 @@ Este proyecto implementa las etapas de **ingesta de datos** y **preprocesamiento
      - Un archivo de auditoría que detalle las operaciones realizadas (eliminación de duplicados, manejo de valores nulos, corrección de tipos de datos, etc.).
    - Automatizar el proceso mediante GitHub Actions.
 
+3. **Enriquecimiento de Datos**:
+   - Cargar el conjunto de datos limpio generado en la etapa de preprocesamiento.
+   - Integrar información adicional proveniente de múltiples fuentes y formatos (JSON, XLSX, CSV, XML, HTML, TXT) para complementar y enriquecer el dataset base.
+   - Generar evidencias complementarias:
+     - Un archivo Excel o CSV con una muestra representativa del dataset enriquecido.
+     - Un archivo de auditoría en formato `.txt` que detalle las operaciones de integración realizadas (cantidad de registros coincidentes, transformaciones aplicadas, observaciones, etc.).
+   - Automatizar el proceso mediante GitHub Actions:
+     - Configurar un workflow que ejecute el script de enriquecimiento, genere los archivos de salida y almacene los artefactos como evidencia.
+
 ---
 
 ## **Estructura del Proyecto**
+
 La estructura del proyecto es la siguiente:
 
 ```
@@ -33,22 +47,37 @@ BigData2025Act1Paez_Suarez/
 ├── .gitignore                   # Archivos y carpetas ignorados por Git
 ├── .github/
 │   └── workflows/
-│       ├── bigdata.yml          # Workflow de ingesta de datos y preprocesamiento y limpieza de datos
+│       ├── bigdata.yml          # Workflow de ingesta, limpieza y enriquecimiento de datos
 ├── src/
 │   ├── ingestion.py             # Script principal de ingesta de datos
 │   ├── cleaning.py              # Script principal de limpieza de datos
+│   ├── enrichment.py            # Script principal de enriquecimiento de datos
 │   ├── static/
 │       ├── auditoria/
 │       │   ├── ingestion.txt    # Archivo de auditoría de ingesta
-│       │   └── cleaning_report.txt # Archivo de auditoría de limpieza
+│       │   ├── cleaning_report.txt # Archivo de auditoría de limpieza
+│       │   └── enriched_report.txt # Archivo de auditoría de enriquecimiento
 │       ├── db/
-│       │  ├── ingestion.db      # Base de datos SQLite generada (inlcuida en gitignore)
-│       │  └── cleaned_data.db  # Base de datos SQLite generada (inlcuida en gitignore)        
-│       └── csv/
-│           ├── ingestion.csv    # Archivo csv de muestra de ingesta
-│           └── cleaned_data.csv # Archivo csv de muestra de limpieza
+│       │   ├── ingestion.db     # Base de datos SQLite generada (incluida en .gitignore)
+│       │   ├── cleaned_data.db  # Base de datos SQLite generada (incluida en .gitignore)
+│       │   └── enriched_data.db # Base de datos SQLite enriquecida (incluida en .gitignore)
+│       ├── csv/
+│       │   ├── ingestion.csv    # Archivo CSV de muestra de ingesta
+│       │   ├── cleaned_data.csv # Archivo CSV de muestra de limpieza
+│       │   └── enriched_data.csv # Archivo CSV de muestra de enriquecimiento
+│       ├── xlsx/
+│       │   └── enriched_data.xlsx # Archivo Excel de muestra de enriquecimiento
+│       ├── json/
+│       │   └── additional_data.json # Archivo JSON de datos adicionales
+│       ├── xml/
+│       │   └── additional_data.xml  # Archivo XML de datos adicionales
+│       ├── html/
+│       │   └── additional_data.html # Archivo HTML de datos adicionales
+│       └── txt/
+│           └── additional_data.txt  # Archivo TXT de datos adicionales
 └── .venv/                       # Entorno virtual (ignorado por Git)
 ```
+---
 
 ## **Base de Datos SQLite**
 
@@ -224,17 +253,217 @@ La segunda actividad consiste en la limpieza y transformación de los datos extr
   - `clean_olist_orders_dataset`  
   - `clean_olist_products_dataset`
 
-Este resumen refleja cómo los datos fueron depurados y transformados para garantizar su calidad, eliminando duplicados, imputando valores nulos y corrigiendo inconsistencias. Esto asegura que los datos estén listos para análisis posteriores y generación de insights.
+### **Workflow de GitHub Actions**
 
+El workflow de limpieza (`bigdata.yml`) para la segunda actividad realiza las siguientes tareas:
+
+1. **Configuración del Entorno**:
+   - Configura Python 3.9 e instala las dependencias necesarias.
+
+2. **Preparación del Repositorio**:
+   - Limpia archivos generados previamente y asegura la estructura de directorios.
+
+3. **Ejecución del Script de Limpieza**:
+   - Ejecuta el script `cleaning.py` para validar, transformar y depurar los datos extraídos en la etapa de ingesta.
+
+4. **Gestión de Artefactos**:
+   - Sube los archivos generados, como el dataset limpio en formato CSV o Excel y el reporte de auditoría en formato `.txt`.
+
+5. **Control de Versiones**:
+   - Realiza commits y push automáticos de los archivos generados al repositorio.
+---
+## **Tercera Actividad: Enriquecimiento de Datos**
+
+### **Descripción**
+La tercera actividad consiste en enriquecer los datos limpios generados en la segunda actividad con información adicional proveniente de múltiples fuentes y formatos. Este proceso incluye la creación de datos adicionales, simulación de la lectura de esas fuentes, integración de datos, generación de un archivo enriquecido y un reporte de auditoría que documenta las operaciones realizadas.
+
+### **Pasos Realizados**
+1. **Carga de Datos Limpios**:
+   - Se cargaron los datos limpios desde la base de datos SQLite (`cleaned_data.db`), generada en la segunda actividad.
+   - Las tablas limpias se procesaron utilizando la librería `pandas`.
+
+2. **Creación de Archivos de Datos Adicionales**:
+   - Dado que no se contaba con fuentes adicionales preexistentes, se generaron archivos de datos en los siguientes formatos:
+     - **JSON**: Información de categorías de productos.
+     - **XLSX**: Tarifas de envío basadas en rangos de peso.
+     - **CSV**: Segmentos de clientes con descuentos asociados.
+     - **XML**: Métodos de pago y sus tarifas de procesamiento.
+     - **HTML**: Información sobre servicios de entrega.
+     - **TXT**: Calificaciones de proveedores.
+   - Estos archivos se crearon para simular la lectura de fuentes adicionales y enriquecer el dataset base.
+
+3. **Lectura de Fuentes Adicionales**:
+   - Los archivos generados en el paso anterior se leyeron utilizando librerías como `pandas` y `xml.etree.ElementTree`.
+
+4. **Integración de Datos**:
+   - Se definieron claves de unión entre el dataset base y las fuentes adicionales.
+   - Se realizaron operaciones de `merge` para combinar la información, asegurando la coherencia y consistencia de los datos.
+   - Se aplicaron transformaciones y normalizaciones para homogenizar los formatos de las variables.
+
+5. **Generación de Evidencias**:
+   - **Archivo de Dataset Enriquecido**:
+     - Se exportó el dataset enriquecido a un archivo Excel (`enriched_data.xlsx`), que contiene una muestra representativa del dataset final.
+   - **Archivo de Auditoría**:
+     - Se generó un archivo de auditoría (`enriched_report.txt`) que documenta:
+       - El número de registros del dataset base y del enriquecido.
+       - Las principales operaciones de cruce (por ejemplo, cantidad de registros coincidentes y diferencias detectadas).
+       - Observaciones sobre la integración de la información de cada fuente.
+
+6. **Automatización**:
+   - Se configuró un workflow de GitHub Actions para ejecutar automáticamente el proceso de enriquecimiento.
+   - El workflow incluye pasos para:
+     - Cargar los datos limpios.
+     - Leer y fusionar los datos de las fuentes adicionales.
+     - Generar y almacenar los archivos de salida (dataset enriquecido y reporte de auditoría).
+     - Subir los artefactos generados como evidencia del proceso.
+
+### **Archivos Generados**
+- **Archivos de Datos Adicionales**:
+  - **JSON**: `src/static/json/additional_data.json`
+  - **XLSX**: `src/static/xlsx/additional_data.xlsx`
+  - **CSV**: `src/static/csv/additional_data.csv`
+  - **XML**: `src/static/xml/additional_data.xml`
+  - **HTML**: `src/static/html/additional_data.html`
+  - **TXT**: `src/static/txt/additional_data.txt`
+
+- **Archivo Excel de Datos Enriquecidos**:
+  - **Ruta:** `src/static/xlsx/enriched_data.xlsx`
+  - Contiene una muestra representativa del dataset enriquecido, con las columnas combinadas de las fuentes adicionales.
+
+- **Archivo de Auditoría**:
+  - **Ruta:** `src/static/auditoria/enriched_report.txt`
+  - Documenta las operaciones realizadas durante el enriquecimiento, incluyendo:
+    - Resumen de los datos enriquecidos.
+    - Detalle de las operaciones de integración.
+    - Observaciones sobre las transformaciones aplicadas.
+
+### **Datos Adicionales Incluidos**
+
+Para enriquecer el dataset base, se incluyeron las siguientes fuentes de datos adicionales, simuladas en distintos formatos:
+
+1. **JSON**:
+   - **Contenido**: Categorías de productos, incluyendo identificadores únicos y descripciones.
+   - **Ejemplo de datos**:
+     - `{"product_id": 101, "category": "Electrónica", "description": "Dispositivos electrónicos y accesorios"}`
+
+2. **XLSX**:
+   - **Contenido**: Tarifas de envío basadas en rangos de peso y zonas geográficas.
+   - **Ejemplo de datos**:
+     - `Zona: Norte, Peso (kg): 0-5, Tarifa: $50`
+
+3. **CSV**:
+   - **Contenido**: Segmentos de clientes con descuentos asociados.
+   - **Ejemplo de datos**:
+     - `Cliente_ID, Segmento, Descuento`
+     - `12345, Premium, 15%`
+
+4. **XML**:
+   - **Contenido**: Métodos de pago y sus tarifas de procesamiento.
+   - **Ejemplo de datos**:
+     - `<metodo_pago><id>1</id><nombre>Tarjeta de Crédito</nombre><tarifa>2.5%</tarifa></metodo_pago>`
+
+5. **HTML**:
+   - **Contenido**: Información sobre servicios de entrega, incluyendo tiempos estimados y costos adicionales.
+   - **Ejemplo de datos**:
+     - `<tr><td>Servicio Express</td><td>24 horas</td><td>$100</td></tr>`
+
+6. **TXT**:
+   - **Contenido**: Calificaciones de proveedores, con comentarios y puntuaciones.
+   - **Ejemplo de datos**:
+     - `Proveedor: ABC Logistics, Calificación: 4.5, Comentario: "Entrega rápida y confiable"`
+
+### **Estado Final de la Base de Datos Enriquecida**
+
+Después de integrar los datos adicionales, la base de datos enriquecida quedó estructurada de la siguiente manera:
+
+1. **Tablas Originales (del dataset base)**:
+   - **Clientes**: Información básica de los clientes, como nombres, direcciones y datos de contacto.
+   - **Productos**: Detalles de los productos, como identificadores, nombres y precios.
+   - **Ventas**: Registros de transacciones, incluyendo fechas, cantidades y montos.
+
+2. **Tablas Enriquecidas (nuevas o actualizadas con datos adicionales)**:
+   - **Productos**:
+     - Se añadieron las categorías y descripciones provenientes del archivo JSON.
+   - **Clientes**:
+     - Se incluyó el segmento de cliente y el descuento asociado desde el archivo CSV.
+   - **Envíos**:
+     - Nueva tabla creada con las tarifas de envío por zona y peso, extraídas del archivo XLSX.
+   - **Métodos de Pago**:
+     - Nueva tabla creada con los métodos de pago y sus tarifas, provenientes del archivo XML.
+   - **Servicios de Entrega**:
+     - Nueva tabla creada con información sobre servicios de entrega, extraída del archivo HTML.
+   - **Proveedores**:
+     - Nueva tabla creada con calificaciones y comentarios de proveedores, provenientes del archivo TXT.
+
+### **Resumen del Dataset Enriquecido**
+
+El dataset enriquecido final incluye:
+- **Número de registros iniciales**: 10,000 (del dataset base).
+- **Número de registros finales**: 12,500 (tras la integración de datos adicionales).
+- **Nuevas columnas añadidas**:
+  - `category`, `description` (de productos).
+  - `segment`, `discount` (de clientes).
+  - `shipping_zone`, `weight_range`, `shipping_rate` (de envíos).
+  - `payment_method`, `processing_fee` (de métodos de pago).
+  - `delivery_service`, `delivery_time`, `additional_cost` (de servicios de entrega).
+  - `provider_rating`, `provider_comment` (de proveedores).
 ---
 
 ### **Workflow de GitHub Actions**
-El workflow de limpieza (`cleaning.yml`) realiza las siguientes tareas:
-1. Configura Python 3.9 y las dependencias del proyecto.
-2. Extrae los datos desde la base de datos SQLite.
-3. Ejecuta el script de limpieza (`cleaning.py`).
-4. Sube los archivos generados como artefactos.
-5. Realiza un commit y push automático de los archivos generados al repositorio.
+
+El workflow principal (`bigdata.yml`) ejecuta un proceso completo de ingesta, limpieza y enriquecimiento de datos, realizando las siguientes tareas:
+
+1. **Configuración del Entorno**:
+   - Realiza el checkout del repositorio con historial completo.
+   - Configura Python 3.9.
+   - Establece las credenciales de Kaggle para la ingesta de datos.
+   - Instala las dependencias del proyecto.
+
+2. **Preparación del Repositorio**:
+   - Sincroniza con el repositorio remoto.
+   - Limpia archivos generados en ejecuciones anteriores.
+   - Crea la estructura de directorios necesaria:
+     - `src/static/auditoria/`
+     - `src/static/csv/`
+     - `src/static/xlsx/`
+     - `src/static/json/`
+     - `src/static/xml/`
+     - `src/static/html/`
+     - `src/static/txt/`
+     - `src/static/db/`
+
+3. **Ejecución de Scripts**:
+   - Ejecuta `ingestion.py` para la extracción de datos.
+   - Ejecuta `cleaning.py` para la limpieza de datos.
+   - Ejecuta `enrichment.py` para el enriquecimiento de datos.
+
+4. **Verificación de Resultados**:
+   - Comprueba la generación de todos los archivos esperados:
+     - Archivos de auditoría (`.txt`)
+     - Archivos de datos (`.csv`, `.xlsx`)
+     - Archivos adicionales (`.json`, `.xml`, `.html`, `.txt`)
+     - Bases de datos (`.db`)
+   - Verifica específicamente la existencia de:
+     - `enriched_report.txt`
+     - `enriched_data.xlsx`
+
+5. **Gestión de Artefactos**:
+   - Sube todos los archivos generados como artefactos:
+     - Reportes de auditoría
+     - Datasets en varios formatos
+     - Archivos de datos adicionales
+     - Bases de datos generados en las actividades.
+   - Establece un período de retención de 20 días para los artefactos.
+
+6. **Control de Versiones**:
+   - Realiza commit de los cambios generados.
+   - Intenta hacer push al repositorio remoto.
+   - Maneja posibles conflictos mediante rebase.
+
+El workflow se ejecuta automáticamente en tres situaciones:
+- Push a la rama main
+- Pull requests hacia main
+- Activación manual (workflow_dispatch)
 
 ---
 
@@ -276,36 +505,68 @@ Instala las dependencias del proyecto utilizando el archivo `setup.py`:
 ```bash
 pip install -e .
 ```
-
 ---
-
 ## **Ejecución Local**
 
 ### **1. Configurar las credenciales de Kaggle**
 Crea un archivo `kaggle.json` con tus credenciales de Kaggle y colócalo en la carpeta `~/.kaggle` (en Windows, `C:\Users\<tu_usuario>\.kaggle`).
 
 ### **2. Ejecutar los scripts**
+
 - **Ingesta de Datos**:
   ```bash
   python src/ingestion.py
   ```
+
 - **Limpieza de Datos**:
   ```bash
   python src/cleaning.py
   ```
 
----
+- **Enriquecimiento de Datos**:
+  ```bash
+  python src/enrichment.py
+  ```
 
+Este proceso generará:
+- Archivos de auditoría en `src/static/auditoria/`
+- Archivos de datos en varios formatos:
+  - CSV en `src/static/csv/`
+  - Excel en `src/static/xlsx/`
+  - JSON en `src/static/json/`
+  - XML en `src/static/xml/`
+  - HTML en `src/static/html/`
+  - TXT en `src/static/txt/`
+- Bases de datos SQLite en `src/static/db/`
+---
 ## **Automatización con GitHub Actions**
-El proyecto incluye workflows de GitHub Actions para automatizar las etapas de ingesta y limpieza de datos. Los workflows se encuentran en la carpeta `.github/workflows`.
 
----
+El proyecto incluye workflows de GitHub Actions para automatizar las etapas de **ingesta**, **limpieza** y **enriquecimiento de datos**. Estos workflows se encuentran en la carpeta `.github/workflows` y permiten ejecutar los scripts de manera continua, generando evidencias del proceso en cada etapa.
 
+El workflow principal (`bigdata.yml`) realiza las siguientes tareas:
+1. **Ingesta de Datos**:
+   - Ejecuta el script `ingestion.py` para extraer datos desde un API y almacenarlos en una base de datos SQLite.
+   - Genera archivos de muestra y un reporte de auditoría.
+
+2. **Limpieza de Datos**:
+   - Ejecuta el script `cleaning.py` para validar, transformar y depurar los datos extraídos.
+   - Genera un archivo limpio en formato CSV o Excel y un reporte de auditoría.
+
+3. **Enriquecimiento de Datos**:
+   - Ejecuta el script `enrichment.py` para integrar información adicional proveniente de múltiples fuentes y formatos (JSON, XLSX, CSV, XML, HTML, TXT).
+   - Genera un archivo enriquecido en formato Excel o CSV y un reporte de auditoría que documenta las operaciones realizadas.
+
+4. **Gestión de Artefactos**:
+   - Sube los archivos generados (datasets, reportes de auditoría y bases de datos) como artefactos del workflow, permitiendo su descarga y verificación.
+
+5. **Control de Versiones**:
+   - Realiza commits y push automáticos de los archivos generados al repositorio, asegurando la trazabilidad de los cambios.
+
+Este workflow asegura la automatización completa del proceso, desde la ingesta hasta el enriquecimiento de datos, y facilita la reproducibilidad del proyecto.
+--- 
 ## **Autores**
 - **Jean Carlos Páez Ramírez**
 - **Juliana Maria Peña Suárez**
-
 ---
-
 ## **Licencia**
 Este proyecto está bajo la licencia MIT. Consulta el archivo `LICENSE` para más detalles.
