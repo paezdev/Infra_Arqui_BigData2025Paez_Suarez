@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 Reporte de Auditoría de Limpieza - 2025-03-27 01:49:22
+=======
+Reporte de Auditoría de Limpieza - 2025-03-17 18:53:22
+>>>>>>> 197b6dd920cad04b148113ead52d621f41856b62
 ==================================================
 RESUMEN GENERAL:
 - Registros antes de la limpieza: 1550922
