@@ -218,6 +218,52 @@ def save_results(enriched_data):
     with open('src/static/auditoria/enriched_report.txt', 'w') as f:
         f.write(audit_content)
 
+def save_final_db(cleaned_data, enriched_data):
+    """
+    Guarda en una única base de datos las tablas con los nombres finales deseados,
+    combinando datos limpios y enriquecidos, y genera el archivo "enriched_data.db".
+    """
+    print("Generando la base de datos final con tablas limpias y enriquecidas...")
+
+    # Ruta donde se creará la base de datos final
+    os.makedirs('src/static/db', exist_ok=True)
+    db_path = 'src/static/db/enriched_data.db'
+
+    # Eliminar la base de datos si ya existe
+    if os.path.exists(db_path):
+        print(f"Eliminando base de datos existente en {db_path}...")
+        os.remove(db_path)
+
+    # Crear conexión a la base de datos
+    conn = sqlite3.connect(db_path)
+
+    # Mapeo de nombre de tabla final -> DataFrame de origen
+    # En este mapeo se indica qué tablas se guardan enriquecidas y cuáles se mantienen limpias
+    final_tables = {
+        # Tablas enriquecidas
+        "enriched_olist_customers_dataset": enriched_data["customers"],
+        "enriched_olist_orders_dataset": enriched_data["orders"],
+        "enriched_olist_products_dataset": enriched_data["products"],
+
+        # Tablas limpias (ya reprocesadas en otro .py)
+        "clean_olist_geolocation_dataset": cleaned_data["clean_olist_geolocation_dataset"],
+        "clean_olist_order_items_dataset": cleaned_data["clean_olist_order_items_dataset"],
+        "clean_olist_order_payments_dataset": cleaned_data["clean_olist_order_payments_dataset"],
+        "clean_olist_order_reviews_dataset": cleaned_data["clean_olist_order_reviews_dataset"],
+        "clean_olist_sellers_dataset": cleaned_data["clean_olist_sellers_dataset"],
+        "clean_product_category_name_translation": cleaned_data["clean_product_category_name_translation"]
+    }
+
+    # Guardar cada tabla en la base de datos con su nombre final
+    for final_name, df in final_tables.items():
+        print(f"Guardando tabla '{final_name}' con {len(df)} registros.")
+        df.to_sql(final_name, conn, if_exists="replace", index=False)
+
+    conn.close()
+    print(f"Base de datos final generada en: {db_path}")
+    return db_path
+
+
 def main():
     """
     Función principal que ejecuta el proceso de enriquecimiento.
@@ -237,6 +283,9 @@ def main():
 
         # 5. Guardar resultados
         save_results(enriched_data)
+
+        # 6. Guardar la base de datos final (archivo: enriched_data.db)
+        save_final_db(cleaned_data, enriched_data)
 
         print("Proceso de enriquecimiento completado exitosamente.")
 

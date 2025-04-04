@@ -1,8 +1,8 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="ingestion-bigdata",
-    version="1.0.0",
+    name="data-enrichment-bigdata",
+    version="1.0.1",
     packages=find_packages(),
     install_requires=[
         "pandas>=2.0.0",
@@ -17,8 +17,8 @@ setup(
     author="Jean Carlos Páez Ramírez y Juliana Maria Peña Suarez",
     author_email="",
     asignatura="Infraestructura y arquitectura para Big Data",
-    tema="Ingestión y procesamiento de Datos",    
-    description="Etapas de ingesta y preprocesamiento de datos para el proyecto integrador de infraestructura y arquitectura para Big Data",
+    tema="Proceso Completo de Ingesta, Limpieza y Proceso de enriquecimiento de datos",    
+    description="Etapas de ingesta, limpieza y proceso de enriquecimiento de datos para el proyecto integrador de infraestructura y arquitectura para Big Data",
     docente="Andres Felipe Callejas Jaramillo",
     python_requires=">=3.9",
 )
